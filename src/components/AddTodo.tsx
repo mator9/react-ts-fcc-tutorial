@@ -1,32 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { useTodo } from '../context'
+import { useTodo } from '../context/useTodo'
 import { Input } from './Input'
 
 export const AddTodo = () => {
+  // const [todos, setTodos] = useState<string[]>([])
+  const { addTodo } = useTodo()
   const [input, setInput] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
     }
-  
-    // return () => {
-    //   second
-    // }
   }, [])
-  
+
   const handleSubmission = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('form has been submitted')
+    // if (input.trim() !== '') {
+    //   setTodos([...todos, input])
+    //   setInput('')
+    // }
+    if (input.trim() !== '') {
+      addTodo(input)
+      setInput('')
+      toast.success('Todo added successfully!')
+    } else {
+      toast.error('Todo field cannot be empty!')
+    }
   }
 
   return (
     <form onSubmit={handleSubmission}>
       <div className="flex items-center w-full max-w-lg gap-2 p-5 m-auto">
-        <input
-          value={input}
+        <Input
           ref={inputRef}
+          value={input}
           onChange={e => setInput(e.target.value)}
           type="text"
           className="w-full px-5 py-2 bg-transparent border-2 outline-none border-zinc-600 rounded-xl placeholder:text-zinc-500 focus:border-white"
